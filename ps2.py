@@ -76,7 +76,10 @@ class RectangularRoom(object):
         width: an integer > 0
         height: an integer > 0
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        self.width = width
+        self.height = height
+        self.Tile = [[False for x in range(self.width)] for x in range(self.height)]
     
     def cleanTileAtPosition(self, pos):
         """
@@ -86,7 +89,9 @@ class RectangularRoom(object):
 
         pos: a Position
         """
-        raise NotImplementedError
+        #raise NotImplementedError 
+        self.Tile[int(math.floor(pos.getY()))][int(math.floor(pos.getX()))] = True
+        
 
     def isTileCleaned(self, m, n):
         """
@@ -98,7 +103,8 @@ class RectangularRoom(object):
         n: an integer
         returns: True if (m, n) is cleaned, False otherwise
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        return self.Tile[n][m]
     
     def getNumTiles(self):
         """
@@ -106,7 +112,8 @@ class RectangularRoom(object):
 
         returns: an integer
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        return self.width*self.height
 
     def getNumCleanedTiles(self):
         """
@@ -114,7 +121,12 @@ class RectangularRoom(object):
 
         returns: an integer
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        cleaned_sum = 0
+        for i in range(self.height) :
+            cleaned_sum += sum(self.Tile[i])
+        return cleaned_sum
+        
 
     def getRandomPosition(self):
         """
@@ -122,7 +134,8 @@ class RectangularRoom(object):
 
         returns: a Position object.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        return Position(random.random()*(self.width),random.random()*(self.height))
 
     def isPositionInRoom(self, pos):
         """
@@ -131,7 +144,13 @@ class RectangularRoom(object):
         pos: a Position object.
         returns: True if pos is in the room, False otherwise.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        if pos.getX() < 0.0 or pos.getX() >= self.width:
+            return False
+        if pos.getY() < 0.0 or pos.getY() >= self.height:
+            return False
+        return True
+            
 
 
 class Robot(object):
