@@ -251,12 +251,24 @@ class StandardRobot(Robot):
         self.room.cleanTileAtPosition(new_pos)
 
 # Uncomment this line to see your implementation of StandardRobot in action!
-testRobotMovement(StandardRobot, RectangularRoom)
+#testRobotMovement(StandardRobot, RectangularRoom)
 
 
 # === Problem 3
 def clean(num_robots, speed, width, height, min_coverage, robot_type):
+    room = RectangularRoom(width, height)
+    robots = [robot_type(room, speed) for x in range(num_robots)]
+    time = 0
+    #anim = ps2_visualize.RobotVisualization(num_robots, width, height)
+    while room.getNumCleanedTiles()/float(room.getNumTiles()) < min_coverage :
+        for robot in robots :
+            robot.updatePositionAndClean()
+        time += 1
+        # Run the animation 
+        #anim.update(room, robots)
     
+    #anim.done()
+    return time
 
     
 def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
@@ -277,10 +289,15 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     robot_type: class of robot to be instantiated (e.g. StandardRobot or
                 RandomWalkRobot)
     """
-    raise NotImplementedError
+    #raise NotImplementedError
+    total_time = 0
+    for i in range(num_trials) :
+        total_time += clean(num_robots, speed, width, height, min_coverage, robot_type)
+    return total_time/float(num_trials)
+        
 
 # Uncomment this line to see how much your simulation takes on average
-##print  runSimulation(1, 1.0, 10, 10, 0.75, 30, StandardRobot)
+#print  runSimulation(5, 1.0, 30, 30, 1.0, 30, StandardRobot)
 
 
 # === Problem 4
@@ -296,7 +313,17 @@ class RandomWalkRobot(Robot):
         Move the robot to a new position and mark the tile it is on as having
         been cleaned.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        new_pos = self.pos.getNewPosition(self.direction, self.speed)
+        while not self.room.isPositionInRoom(new_pos) :
+            self.setRobotDirection(random.choice(range(360)))
+            new_pos = self.pos.getNewPosition(self.direction, self.speed)
+        self.setRobotPosition(new_pos)
+        self.setRobotDirection(random.choice(range(360)))
+        self.room.cleanTileAtPosition(new_pos)
+
+# Uncomment this line to see your implementation of RandomWalkRobot in action!
+#testRobotMovement(RandomWalkRobot, RectangularRoom)
 
 
 def showPlot1(title, x_label, y_label):
@@ -318,6 +345,7 @@ def showPlot1(title, x_label, y_label):
     pylab.ylabel(y_label)
     pylab.show()
 
+#showPlot1("Time It Takes 1 - 10 Robots To Clean 80% Of A Room", "Number of Robots", "Time-steps")
     
 def showPlot2(title, x_label, y_label):
     """
